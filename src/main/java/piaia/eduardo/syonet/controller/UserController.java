@@ -1,5 +1,9 @@
 package piaia.eduardo.syonet.controller;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,16 @@ public class UserController {
         User userWithUsername = userRepository.findUserByUsername(user.getUsername());
         if (userWithUsername != null) {
             return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(StandardCharsets.UTF_8.encode(user.getPassword()));
+            String password = String.format("%032x", new BigInteger(1, md5.digest()));
+            user.setPassword(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
 
         User persistedUser = userRepository.save(user);

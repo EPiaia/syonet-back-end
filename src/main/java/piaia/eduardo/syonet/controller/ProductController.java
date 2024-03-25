@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import piaia.eduardo.syonet.model.Product;
+import piaia.eduardo.syonet.model.ProductHistory;
+import piaia.eduardo.syonet.repository.ProductHistoryRepository;
 import piaia.eduardo.syonet.repository.ProductRepository;
 
 @RestController
@@ -24,6 +26,8 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductHistoryRepository productHistoryRepository;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -63,6 +67,11 @@ public class ProductController {
         Product existentProduct = productRepository.findById(id).orElse(null);
         if (existentProduct == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        List<ProductHistory> history = productHistoryRepository.findAllByProduct(existentProduct);
+        if (!history.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
         
         productRepository.delete(existentProduct);
