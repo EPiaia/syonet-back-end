@@ -2,8 +2,8 @@
 
 ### Requisitos:
 - Possuir JDK 17 instalado;
-- Possuir PostgreSQL instalado com credenciais padrões (username: postgres | senha: postgres);
-- Possui Apache Maven instalado e configurado.
+- Possuir PostgreSQL instalado com credenciais padrões (username: postgres | senha: postgres | porta: 5432);
+- Possuir Apache Maven instalado e configurado.
 
 ### Passos:
 - No pgAdmin rodar a SQL:
