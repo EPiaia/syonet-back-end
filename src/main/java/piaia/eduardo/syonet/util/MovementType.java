@@ -1,5 +1,7 @@
 package piaia.eduardo.syonet.util;
 
+import java.util.Arrays;
+
 public enum MovementType {
 
     STOCK_IN {
@@ -23,4 +25,8 @@ public enum MovementType {
     public abstract Integer getId();
 
     public abstract String getDescription();
+
+    public static MovementType getTypeById(int id) {
+        return Arrays.stream(values()).filter(type -> type.getId().equals(id)).findFirst().orElse(null);
+    }
 }

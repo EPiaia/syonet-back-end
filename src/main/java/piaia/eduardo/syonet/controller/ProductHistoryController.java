@@ -3,6 +3,8 @@ package piaia.eduardo.syonet.controller;
 
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import piaia.eduardo.syonet.model.Product;
 import piaia.eduardo.syonet.model.ProductHistory;
 import piaia.eduardo.syonet.model.User;
+import piaia.eduardo.syonet.record.StockHistory;
 import piaia.eduardo.syonet.record.StockMovement;
 import piaia.eduardo.syonet.repository.ProductHistoryRepository;
 import piaia.eduardo.syonet.repository.ProductRepository;
@@ -85,6 +90,27 @@ public class ProductHistoryController {
 
         ProductHistory persistedHistory = productHistoryRepository.save(productHistory);
         return ResponseEntity.ok(persistedHistory);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StockHistory>> getAllHistory() throws Exception {
+        List<ProductHistory> history = productHistoryRepository.findAllByOrderByHourDesc();
+        if (history.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<StockHistory> stockHistories = new ArrayList<>();
+        for (ProductHistory prodHistory : history) {
+            Product product = prodHistory.getProduct();
+            String productIdentification = product.getId() + " - " + product.getName();
+            User user = prodHistory.getUser();
+            String type = MovementType.getTypeById(prodHistory.getType()).getDescription();
+            String dateHour = new SimpleDateFormat("dd/MM/yyyy").format(prodHistory.getHour());
+            BigDecimal quantity = prodHistory.getQuantity();
+            stockHistories.add(new StockHistory(productIdentification, type, user.getName(), dateHour, quantity));
+        }
+
+        return ResponseEntity.ok(stockHistories);    
     }
 
 }
