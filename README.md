@@ -1,11 +1,11 @@
-#Informações para rodar projeto:
+# Informações para rodar projeto:
 
-###Requisitos:
+### Requisitos:
 - Possuir JDK 17 instalado;
 - Possuir PostgreSQL instalado com credenciais padrões (username: postgres | senha: postgres);
 - Possui Apache Maven instalado e configurado.
 
-###Passos:
+### Passos:
 - No pgAdmin rodar a SQL:
 **CREATE DATABASE syonet**;
 - Acessar repositório clonado e rodar o comando:
